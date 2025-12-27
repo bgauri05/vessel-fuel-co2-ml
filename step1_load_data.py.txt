@@ -1,0 +1,13 @@
+import pandas as pd
+
+# Load the dataset
+df = pd.read_excel(
+    "Vessel_Fuel_Consumption_&_CO2_Emissions.xlsx",
+    sheet_name="SHIP_FUEL_EFFICIENCY"
+)
+
+# Show first 5 rows
+print(df.head())
+
+# Show column info
+print(df.info())
