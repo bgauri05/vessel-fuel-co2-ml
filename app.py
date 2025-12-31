@@ -117,6 +117,15 @@ except Exception as e:
     st.error(f"⚠️ Error loading models: {e}")
     st.stop()
 
+# Ship type to fuel type mapping (based on historical data)
+# FUEL_TYPE1 = HFO (Heavy Fuel Oil), FUEL_TYPE2 = Diesel
+SHIP_FUEL_CONSTRAINTS = {
+    'TYPE1': ['FUEL_TYPE1', 'FUEL_TYPE2'],  # Both HFO and Diesel
+    'TYPE2': ['FUEL_TYPE1', 'FUEL_TYPE2'],  # Both HFO and Diesel
+    'TYPE3': ['FUEL_TYPE2'],                # Diesel only
+    'TYPE4': ['FUEL_TYPE1', 'FUEL_TYPE2']   # Both HFO and Diesel
+}
+
 # Header
 st.markdown("# ⚓ Synergy Maritime Analytical Platform")
 st.markdown("### 🌊 Intelligent Fuel & CO₂ Emission Forecasting System")
@@ -155,7 +164,9 @@ with col1:
     
 with col2:
     st.markdown("## ⚙️ Technical Parameters")
-    fuel_type = st.selectbox("⛽ Fuel Type", list(encoders['FUEL_TYPE_ID'].classes_), help="Type of fuel used")
+    # Filter fuel types based on selected ship type
+    available_fuels = SHIP_FUEL_CONSTRAINTS.get(ship_type, list(encoders['FUEL_TYPE_ID'].classes_))
+    fuel_type = st.selectbox("⛽ Fuel Type", available_fuels, help="Type of fuel used (restricted by ship type)")
     weather = st.selectbox("🌤️ Weather Conditions", list(encoders['WEATHER_CONDITIONS'].classes_), help="Expected weather conditions")
 
 st.markdown("---")
@@ -257,12 +268,14 @@ if predict_button:
 
     import os
     LOG_PATH = "prediction_log.csv"
-    if os.path.exists(LOG_PATH):
-        result_df.to_csv(LOG_PATH, mode="a", header=False, index=False)
-    else:
-        result_df.to_csv(LOG_PATH, index=False)
-
-    st.success("✅ Prediction saved to prediction_log.csv for Power BI analytics!")
+    try:
+        if os.path.exists(LOG_PATH):
+            result_df.to_csv(LOG_PATH, mode="a", header=False, index=False)
+        else:
+            result_df.to_csv(LOG_PATH, index=False)
+        st.success("✅ Prediction saved to prediction_log.csv for Power BI analytics!")
+    except PermissionError:
+        st.warning("⚠️ Could not save to prediction_log.csv - file may be open in Excel or another program. Please close it and try again.")
     
 # Footer
 st.markdown("---")
