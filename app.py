@@ -79,6 +79,21 @@ st.markdown("""
         background-color: rgba(30, 58, 138, 0.8) !important;
         color: #ffffff !important;
     }
+    /* Dropdown menu options */
+    div[data-baseweb="popover"] {
+        background-color: rgba(30, 58, 138, 0.95) !important;
+    }
+    ul[role="listbox"] {
+        background-color: rgba(30, 58, 138, 0.95) !important;
+    }
+    li[role="option"] {
+        background-color: rgba(30, 58, 138, 0.95) !important;
+        color: #ffffff !important;
+    }
+    li[role="option"]:hover {
+        background-color: rgba(59, 130, 246, 0.8) !important;
+        color: #ffffff !important;
+    }
     /* Number input fields */
     input[type="number"] {
         background-color: rgba(30, 58, 138, 0.8) !important;
