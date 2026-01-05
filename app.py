@@ -63,11 +63,25 @@ st.markdown("""
     }
     label {
         color: #ffffff !important;
+        font-weight: 500 !important;
     }
     .stMarkdown {
         color: #ffffff !important;
     }
+    /* Input field labels */
+    div[data-testid="stSelectbox"] label,
+    div[data-testid="stNumberInput"] label {
+        color: #ffffff !important;
+        font-weight: 500 !important;
+    }
+    /* Dropdown selected value - keep dark for readability */
     div[data-baseweb="select"] > div {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        color: #000000 !important;
+    }
+    /* Number input fields */
+    input[type="number"] {
+        background-color: rgba(255, 255, 255, 0.95) !important;
         color: #000000 !important;
     }
     .stButton>button {
