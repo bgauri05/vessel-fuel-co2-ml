@@ -34,7 +34,7 @@ st.markdown("""
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(255, 255, 255, 0.85);
+        background: rgba(255, 255, 255, 0.05);
         z-index: -1;
     }
     .main {
@@ -116,7 +116,7 @@ st.markdown("""
     }
     div[data-testid="stMetricValue"] {
         font-size: 28px;
-        color: #1e40af;
+        color: #ffffff;
         font-weight: bold;
     }
     div[data-testid="stMetricLabel"] {
@@ -125,6 +125,13 @@ st.markdown("""
     }
     div[data-testid="stMetricDelta"] {
         color: #ffffff !important;
+    }
+    /* Metric containers */
+    div[data-testid="stMetric"] {
+        background-color: rgba(30, 58, 138, 0.6) !important;
+        padding: 15px !important;
+        border-radius: 10px !important;
+        border: 1px solid rgba(59, 130, 246, 0.5) !important;
     }
     .element-container div[data-testid="stAlert"] {
         background-color: rgba(30, 58, 138, 0.9) !important;
