@@ -76,28 +76,28 @@ st.markdown("""
     }
     /* Dropdown selected value */
     div[data-baseweb="select"] > div {
-        background-color: rgba(30, 58, 138, 0.8) !important;
-        color: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #000000 !important;
     }
     /* Dropdown menu options */
     div[data-baseweb="popover"] {
-        background-color: rgba(30, 58, 138, 0.95) !important;
+        background-color: #ffffff !important;
     }
     ul[role="listbox"] {
-        background-color: rgba(30, 58, 138, 0.95) !important;
+        background-color: #ffffff !important;
     }
     li[role="option"] {
-        background-color: rgba(30, 58, 138, 0.95) !important;
-        color: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #000000 !important;
     }
     li[role="option"]:hover {
-        background-color: rgba(59, 130, 246, 0.8) !important;
-        color: #ffffff !important;
+        background-color: #e0f2fe !important;
+        color: #000000 !important;
     }
     /* Number input fields */
     input[type="number"] {
-        background-color: rgba(30, 58, 138, 0.8) !important;
-        color: #ffffff !important;
+        background-color: #ffffff !important;
+        color: #000000 !important;
     }
     .stButton>button {
         background: linear-gradient(90deg, #0ea5e9, #0369a1);
