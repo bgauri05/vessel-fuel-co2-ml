@@ -344,28 +344,64 @@ if predict_button:
         </div>
         """, unsafe_allow_html=True)
 
-    # Optional: log to CSV for Power BI
-    result_df = pd.DataFrame([{
-        "SHIP_TYPE": ship_type,
-        "ROUTE_ID": route_id,
-        "MONTH": month,
-        "FUEL_TYPE": fuel_type,
-        "WEATHER": weather,
-        "DISTANCE": distance,
-        "ENGINE_EFFICIENCY": engine_eff,
-        "Predicted_Fuel_L": fuel_pred,
-        "Predicted_CO2_kg": co2_pred
-    }])
-
-    LOG_PATH = os.path.join(base_path, "prediction_log.csv")
+    # Log to Google Sheets
+    from datetime import datetime
     try:
-        if os.path.exists(LOG_PATH):
-            result_df.to_csv(LOG_PATH, mode="a", header=False, index=False)
-        else:
-            result_df.to_csv(LOG_PATH, index=False)
-        st.success("✅ Prediction saved to prediction_log.csv for Power BI analytics!")
-    except PermissionError:
-        st.warning("⚠️ Could not save to prediction_log.csv - file may be open in Excel or another program. Please close it and try again.")
+        import gspread
+        from oauth2client.service_account import ServiceAccountCredentials
+        
+        # Setup Google Sheets connection
+        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+        
+        # Try to use Streamlit secrets (for cloud deployment)
+        try:
+            creds_dict = dict(st.secrets["gcp_service_account"])
+            creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+        except:
+            # Fallback to local JSON file
+            creds_path = os.path.join(base_path, 'service-account.json')
+            creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
+        
+        client = gspread.authorize(creds)
+        
+        # Try to open the spreadsheet
+        try:
+            spreadsheet = client.open("Vessel-Predictions")
+            sheet = spreadsheet.sheet1
+        except gspread.exceptions.SpreadsheetNotFound:
+            st.error("❌ Spreadsheet 'Vessel-Predictions' not found.")
+            st.info("Please create a Google Sheet named 'Vessel-Predictions' and share it with: streamlit-app@flawless-age-483408-b0.iam.gserviceaccount.com")
+            raise
+        
+        # Prepare row data
+        row = [
+            datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            str(ship_type),
+            str(route_id),
+            str(month),
+            str(fuel_type),
+            str(weather),
+            str(distance),
+            str(engine_eff),
+            str(round(fuel_pred, 2)),
+            str(round(co2_pred, 2))
+        ]
+        
+        # Add header if sheet is empty
+        all_values = sheet.get_all_values()
+        if len(all_values) == 0:
+            sheet.append_row(["Timestamp", "Ship Type", "Route", "Month", "Fuel Type", "Weather", "Distance", "Engine Efficiency", "Predicted Fuel (L)", "Predicted CO2 (kg)"])
+        
+        sheet.append_row(row)
+        st.success("✅ Prediction logged to Google Sheets successfully!")
+        
+    except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        st.warning(f"⚠️ Could not log to Google Sheets: {str(e)}")
+        with st.expander("Error details"):
+            st.code(error_details)
+    
     
 # Footer
 st.markdown("---")

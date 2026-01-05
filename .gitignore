@@ -28,6 +28,9 @@ wheels/
 *.log
 prediction_log.csv
 
+# Google Service Account
+service-account.json
+
 # IDE
 .vscode/
 .idea/
