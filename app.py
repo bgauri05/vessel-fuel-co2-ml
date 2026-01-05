@@ -74,15 +74,15 @@ st.markdown("""
         color: #ffffff !important;
         font-weight: 500 !important;
     }
-    /* Dropdown selected value - keep dark for readability */
+    /* Dropdown selected value */
     div[data-baseweb="select"] > div {
-        background-color: rgba(255, 255, 255, 0.95) !important;
-        color: #000000 !important;
+        background-color: rgba(30, 58, 138, 0.8) !important;
+        color: #ffffff !important;
     }
     /* Number input fields */
     input[type="number"] {
-        background-color: rgba(255, 255, 255, 0.95) !important;
-        color: #000000 !important;
+        background-color: rgba(30, 58, 138, 0.8) !important;
+        color: #ffffff !important;
     }
     .stButton>button {
         background: linear-gradient(90deg, #0ea5e9, #0369a1);
