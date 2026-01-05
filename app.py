@@ -75,27 +75,36 @@ st.markdown("""
         font-weight: 500 !important;
     }
     /* Dropdown selected value */
-    div[data-baseweb="select"] > div {
+    div[data-baseweb="select"] > div,
+    div[data-baseweb="select"] div,
+    .stSelectbox > div > div > div {
         background-color: #ffffff !important;
         color: #000000 !important;
     }
     /* Dropdown menu options */
-    div[data-baseweb="popover"] {
+    div[data-baseweb="popover"],
+    div[data-baseweb="popover"] div {
         background-color: #ffffff !important;
     }
-    ul[role="listbox"] {
+    ul[role="listbox"],
+    ul[role="listbox"] li {
         background-color: #ffffff !important;
     }
-    li[role="option"] {
+    li[role="option"],
+    li[role="option"] div,
+    li[role="option"] span {
         background-color: #ffffff !important;
         color: #000000 !important;
     }
-    li[role="option"]:hover {
+    li[role="option"]:hover,
+    li[role="option"]:hover div,
+    li[role="option"]:hover span {
         background-color: #e0f2fe !important;
         color: #000000 !important;
     }
     /* Number input fields */
-    input[type="number"] {
+    input[type="number"],
+    div[data-testid="stNumberInput"] input {
         background-color: #ffffff !important;
         color: #000000 !important;
     }
