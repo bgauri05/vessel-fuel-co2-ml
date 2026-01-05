@@ -3,6 +3,7 @@ import streamlit as st
 import joblib
 import numpy as np
 import pandas as pd
+import os
 
 # Page configuration
 st.set_page_config(
@@ -48,12 +49,26 @@ st.markdown("""
         text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     h2 {
-        color: #1e40af;
+        color: #ffffff;
         border-bottom: 3px solid #3b82f6;
         padding-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     h3 {
-        color: #1e40af;
+        color: #ffffff;
+        text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+    }
+    p {
+        color: #ffffff !important;
+    }
+    label {
+        color: #ffffff !important;
+    }
+    .stMarkdown {
+        color: #ffffff !important;
+    }
+    div[data-baseweb="select"] > div {
+        color: #000000 !important;
     }
     .stButton>button {
         background: linear-gradient(90deg, #0ea5e9, #0369a1);
@@ -73,6 +88,25 @@ st.markdown("""
     div[data-testid="stMetricValue"] {
         font-size: 28px;
         color: #1e40af;
+        font-weight: bold;
+    }
+    div[data-testid="stMetricLabel"] {
+        color: #ffffff !important;
+        font-weight: bold;
+    }
+    div[data-testid="stMetricDelta"] {
+        color: #ffffff !important;
+    }
+    .element-container div[data-testid="stAlert"] {
+        background-color: rgba(30, 58, 138, 0.9) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(59, 130, 246, 0.5) !important;
+    }
+    .element-container div[data-testid="stAlert"] p {
+        color: #ffffff !important;
+    }
+    .element-container div[data-testid="stAlert"] strong {
+        color: #ffffff !important;
     }
     [data-testid="stSidebar"] {
         background: rgba(255, 255, 255, 0.98);
@@ -110,9 +144,17 @@ st.markdown("""
 
 # Load models & encoders
 try:
-    fuel_model = joblib.load('fuel_model.pkl')
-    co2_model = joblib.load('co2_model.pkl')
-    encoders = joblib.load('encoders.pkl')
+    # Get the directory where this script is located
+    base_path = os.path.dirname(os.path.abspath(__file__))
+    
+    # Build full paths to model files
+    fuel_model_path = os.path.join(base_path, 'fuel_model.pkl')
+    co2_model_path = os.path.join(base_path, 'co2_model.pkl')
+    encoders_path = os.path.join(base_path, 'encoders.pkl')
+    
+    fuel_model = joblib.load(fuel_model_path)
+    co2_model = joblib.load(co2_model_path)
+    encoders = joblib.load(encoders_path)
 except Exception as e:
     st.error(f"⚠️ Error loading models: {e}")
     st.stop()
@@ -238,20 +280,24 @@ if predict_button:
     col_insight1, col_insight2 = st.columns(2)
     
     with col_insight1:
-        st.info(f"""
-        **📍 Route Efficiency**  
-        - Distance: {distance:,.0f} km  
-        - Fuel per km: {(fuel_pred/distance):.2f} L/km  
-        - Engine efficiency: {engine_eff:.0f}%
-        """)
+        st.markdown(f"""
+        <div style='background-color: rgba(30, 58, 138, 0.9); padding: 20px; border-radius: 10px; border: 1px solid rgba(59, 130, 246, 0.5);'>
+        <p style='color: white; margin: 0;'><strong style='color: white;'>📍 Route Efficiency</strong></p>
+        <p style='color: white; margin: 5px 0 0 0;'>• Distance: {distance:,.0f} km</p>
+        <p style='color: white; margin: 5px 0 0 0;'>• Fuel per km: {(fuel_pred/distance):.2f} L/km</p>
+        <p style='color: white; margin: 5px 0 0 0;'>• Engine efficiency: {engine_eff:.0f}%</p>
+        </div>
+        """, unsafe_allow_html=True)
     
     with col_insight2:
-        st.warning(f"""
-        **🌱 Environmental Impact**  
-        - CO₂ per km: {(co2_pred/distance):.2f} kg/km  
-        - Carbon footprint: {co2_pred:,.0f} kg  
-        - Trees to offset: {carbon_trees:.0f} trees/year
-        """)
+        st.markdown(f"""
+        <div style='background-color: rgba(30, 58, 138, 0.9); padding: 20px; border-radius: 10px; border: 1px solid rgba(59, 130, 246, 0.5);'>
+        <p style='color: white; margin: 0;'><strong style='color: white;'>🌱 Environmental Impact</strong></p>
+        <p style='color: white; margin: 5px 0 0 0;'>• CO₂ per km: {(co2_pred/distance):.2f} kg/km</p>
+        <p style='color: white; margin: 5px 0 0 0;'>• Carbon footprint: {co2_pred:,.0f} kg</p>
+        <p style='color: white; margin: 5px 0 0 0;'>• Trees to offset: {carbon_trees:.0f} trees/year</p>
+        </div>
+        """, unsafe_allow_html=True)
 
     # Optional: log to CSV for Power BI
     result_df = pd.DataFrame([{
@@ -266,8 +312,7 @@ if predict_button:
         "Predicted_CO2_kg": co2_pred
     }])
 
-    import os
-    LOG_PATH = "prediction_log.csv"
+    LOG_PATH = os.path.join(base_path, "prediction_log.csv")
     try:
         if os.path.exists(LOG_PATH):
             result_df.to_csv(LOG_PATH, mode="a", header=False, index=False)
