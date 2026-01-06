@@ -220,7 +220,7 @@ st.markdown("---")
 
 # Sidebar with info
 with st.sidebar:
-    st.image("https://cdn-icons-png.flaticon.com/512/3774/3774299.png", width=150)
+    st.image("synergy-logo.webp", width=150)
     st.markdown("## 📊 About")
     st.info("""
     This advanced AI-powered platform helps ship management companies:
