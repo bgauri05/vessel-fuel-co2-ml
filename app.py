@@ -207,10 +207,30 @@ except Exception as e:
 # Ship type to fuel type mapping (based on historical data)
 # FUEL_TYPE1 = HFO (Heavy Fuel Oil), FUEL_TYPE2 = Diesel
 SHIP_FUEL_CONSTRAINTS = {
-    'TYPE1': ['FUEL_TYPE1', 'FUEL_TYPE2'],  # Both HFO and Diesel
-    'TYPE2': ['FUEL_TYPE1', 'FUEL_TYPE2'],  # Both HFO and Diesel
-    'TYPE3': ['FUEL_TYPE2'],                # Diesel only
-    'TYPE4': ['FUEL_TYPE1', 'FUEL_TYPE2']   # Both HFO and Diesel
+    'Oil Service Boat': ['HFO', 'Diesel'],
+    'Fishing Trawler': ['HFO', 'Diesel'],
+    'Surfer Boat': ['Diesel'],
+    'Tanker Ship': ['HFO', 'Diesel']
+}
+
+# Mapping dictionaries for display names to IDs
+SHIP_TYPE_MAP = {
+    'Oil Service Boat': 'TYPE1',
+    'Fishing Trawler': 'TYPE2',
+    'Surfer Boat': 'TYPE3',
+    'Tanker Ship': 'TYPE4'
+}
+
+ROUTE_MAP = {
+    'Warri-Bonny': 'ROUTE1',
+    'Port Harcourt-Lagos': 'ROUTE2',
+    'Lagos-Apapa': 'ROUTE3',
+    'Escravos-Lagos': 'ROUTE4'
+}
+
+FUEL_TYPE_MAP = {
+    'HFO': 'FUEL_TYPE1',
+    'Diesel': 'FUEL_TYPE2'
 }
 
 # Header
@@ -245,14 +265,14 @@ col1, col2 = st.columns([1, 1])
 
 with col1:
     st.markdown("## 🚢 Vessel Information")
-    ship_type = st.selectbox("⚓ Ship Type", list(encoders['SHIP_TYPE_ID'].classes_), help="Select the type of vessel")
-    route_id = st.selectbox("🗺️ Route", list(encoders['ROUTE_ID'].classes_), help="Select the shipping route")
+    ship_type = st.selectbox("⚓ Ship Type", list(SHIP_TYPE_MAP.keys()), help="Select the type of vessel")
+    route_id = st.selectbox("🗺️ Route", list(ROUTE_MAP.keys()), help="Select the shipping route")
     month = st.selectbox("📅 Month", list(encoders['MONTH'].classes_), help="Select the month of voyage")
     
 with col2:
     st.markdown("## ⚙️ Technical Parameters")
     # Filter fuel types based on selected ship type
-    available_fuels = SHIP_FUEL_CONSTRAINTS.get(ship_type, list(encoders['FUEL_TYPE_ID'].classes_))
+    available_fuels = SHIP_FUEL_CONSTRAINTS.get(ship_type, list(FUEL_TYPE_MAP.keys()))
     fuel_type = st.selectbox("⛽ Fuel Type", available_fuels, help="Type of fuel used (restricted by ship type)")
     weather = st.selectbox("🌤️ Weather Conditions", list(encoders['WEATHER_CONDITIONS'].classes_), help="Expected weather conditions")
 
@@ -263,7 +283,7 @@ st.markdown("## 📐 Voyage Metrics")
 col3, col4 = st.columns(2)
 
 with col3:
-    distance = st.number_input("🌍 Distance (km)", min_value=0.0, step=10.0, value=1000.0, help="Total voyage distance in kilometers")
+    distance = st.number_input("🌍 Distance (NM)", min_value=0.0, step=10.0, value=1000.0, help="Total voyage distance in nautical miles")
     
 with col4:
     engine_eff = st.number_input("⚡ Engine Efficiency (%)", min_value=0.0, max_value=100.0, step=1.0, value=85.0, help="Current engine efficiency percentage")
@@ -277,11 +297,16 @@ with col_btn2:
 
 if predict_button:
     with st.spinner('🔄 Analyzing voyage parameters...'):
+        # Convert display names to IDs for encoding
+        ship_type_id = SHIP_TYPE_MAP[ship_type]
+        route_id_code = ROUTE_MAP[route_id]
+        fuel_type_id = FUEL_TYPE_MAP[fuel_type]
+        
         # Encode categoricals exactly like in training
-        ship_num = encoders['SHIP_TYPE_ID'].transform([ship_type])[0]
-        route_num = encoders['ROUTE_ID'].transform([route_id])[0]
+        ship_num = encoders['SHIP_TYPE_ID'].transform([ship_type_id])[0]
+        route_num = encoders['ROUTE_ID'].transform([route_id_code])[0]
         month_num = encoders['MONTH'].transform([month])[0]
-        fuel_num = encoders['FUEL_TYPE_ID'].transform([fuel_type])[0]
+        fuel_num = encoders['FUEL_TYPE_ID'].transform([fuel_type_id])[0]
         weather_num = encoders['WEATHER_CONDITIONS'].transform([weather])[0]
 
         row = np.array([[ship_num, route_num, month_num, distance,
@@ -300,14 +325,14 @@ if predict_button:
         st.metric(
             label="⛽ Fuel Consumption",
             value=f"{fuel_pred:,.0f} L",
-            delta=f"{(fuel_pred/distance):.2f} L/km" if distance > 0 else "N/A"
+            delta=f"{(fuel_pred/distance):.2f} L/NM" if distance > 0 else "N/A"
         )
     
     with col_res2:
         st.metric(
             label="🌍 CO₂ Emissions",
             value=f"{co2_pred:,.0f} kg",
-            delta=f"{(co2_pred/distance):.2f} kg/km" if distance > 0 else "N/A"
+            delta=f"{(co2_pred/distance):.2f} kg/NM" if distance > 0 else "N/A"
         )
     
     with col_res3:
@@ -328,8 +353,8 @@ if predict_button:
         st.markdown(f"""
         <div style='background-color: rgba(30, 58, 138, 0.9); padding: 20px; border-radius: 10px; border: 1px solid rgba(59, 130, 246, 0.5);'>
         <p style='color: white; margin: 0;'><strong style='color: white;'>📍 Route Efficiency</strong></p>
-        <p style='color: white; margin: 5px 0 0 0;'>• Distance: {distance:,.0f} km</p>
-        <p style='color: white; margin: 5px 0 0 0;'>• Fuel per km: {(fuel_pred/distance):.2f} L/km</p>
+        <p style='color: white; margin: 5px 0 0 0;'>• Distance: {distance:,.0f} NM</p>
+        <p style='color: white; margin: 5px 0 0 0;'>• Fuel per NM: {(fuel_pred/distance):.2f} L/NM</p>
         <p style='color: white; margin: 5px 0 0 0;'>• Engine efficiency: {engine_eff:.0f}%</p>
         </div>
         """, unsafe_allow_html=True)
@@ -338,7 +363,7 @@ if predict_button:
         st.markdown(f"""
         <div style='background-color: rgba(30, 58, 138, 0.9); padding: 20px; border-radius: 10px; border: 1px solid rgba(59, 130, 246, 0.5);'>
         <p style='color: white; margin: 0;'><strong style='color: white;'>🌱 Environmental Impact</strong></p>
-        <p style='color: white; margin: 5px 0 0 0;'>• CO₂ per km: {(co2_pred/distance):.2f} kg/km</p>
+        <p style='color: white; margin: 5px 0 0 0;'>• CO₂ per NM: {(co2_pred/distance):.2f} kg/NM</p>
         <p style='color: white; margin: 5px 0 0 0;'>• Carbon footprint: {co2_pred:,.0f} kg</p>
         <p style='color: white; margin: 5px 0 0 0;'>• Trees to offset: {carbon_trees:.0f} trees/year</p>
         </div>
