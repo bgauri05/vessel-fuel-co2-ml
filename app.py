@@ -391,11 +391,11 @@ if predict_button:
         
         # Try to open the spreadsheet
         try:
-            spreadsheet = client.open("Vessel-Predictions")
+            spreadsheet = client.open("Vessel-Predictions-v2")
             sheet = spreadsheet.sheet1
         except gspread.exceptions.SpreadsheetNotFound:
-            st.error("❌ Spreadsheet 'Vessel-Predictions' not found.")
-            st.info("Please create a Google Sheet named 'Vessel-Predictions' and share it with: streamlit-app@flawless-age-483408-b0.iam.gserviceaccount.com")
+            st.error("❌ Spreadsheet 'Vessel-Predictions-v2' not found.")
+            st.info("Please create a Google Sheet named 'Vessel-Predictions-v2' and share it with: streamlit-app@flawless-age-483408-b0.iam.gserviceaccount.com")
             raise
         
         # Prepare row data
