@@ -17,18 +17,23 @@ This application enables maritime stakeholders to:
 
 The system is designed as an end-to-end pipeline integrating ML predictions with real-time data storage and visualization tools.
 
+
 🧠 Key Features
 🔮 Machine Learning-based prediction (Regression model)
 📊 Interactive Streamlit web interface
 ☁️ Google Sheets as a real-time cloud database
 📈 Power BI dashboards for advanced analytics
 ⚡ Fast, user-friendly interface
+
+
 🏗️ Tech Stack
 Frontend/UI: Streamlit
 Backend/ML: scikit-learn
 Data Processing: pandas, NumPy
 Cloud Data Layer: Google Sheets API
 Visualization: Power BI
+
+
 📊 How It Works
 User inputs vessel parameters (speed, engine specs, etc.)
 Data is processed and passed to the trained ML model
@@ -39,6 +44,8 @@ Predictions are:
 Displayed in Streamlit
 Stored in Google Sheets
 Power BI connects to this dataset for visualization
+
+
 ⚙️ Machine Learning Model
 Model Type: Regression (e.g., Random Forest)
 Captures non-linear relationships between vessel parameters and emissions
@@ -47,6 +54,8 @@ Speed
 Engine power
 Load conditions
 Voyage characteristics
+
+
 ☁️ Data Storage & Collection (Google Sheets)
 
 This application uses Google Sheets as a lightweight cloud database to store prediction data in real time.
