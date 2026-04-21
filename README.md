@@ -22,7 +22,7 @@ The system is designed as an end-to-end pipeline integrating ML predictions with
 📊 Interactive Streamlit web interface
 ☁️ Google Sheets as a real-time cloud database
 📈 Power BI dashboards for advanced analytics
-⚡ Fast, user-friendly, and deployable system
+⚡ Fast, user-friendly interface
 🏗️ Tech Stack
 Frontend/UI: Streamlit
 Backend/ML: scikit-learn
@@ -52,7 +52,9 @@ Voyage characteristics
 This application uses Google Sheets as a lightweight cloud database to store prediction data in real time.
 
 🔗 Workflow
+
 User Input → ML Model → Prediction → Google Sheets → Power BI Dashboard
+
 ⚙️ API Integration
 
 The app integrates with the Google Sheets API via a service account.
@@ -61,8 +63,8 @@ The app integrates with the Google Sheets API via a service account.
 Created project in Google Cloud Console
 Enabled Google Sheets API
 Generated service account credentials (JSON)
-Shared Google Sheet with service account email
-Connected using Python (gspread, google-auth)
+Shared Google Sheet with the service account email
+Connected using Python libraries (gspread, google-auth)
 💻 Example Code
 import gspread
 from google.oauth2.service_account import Credentials
@@ -92,7 +94,7 @@ CO₂ emission patterns
 Efficiency comparisons
 Operational optimization scenarios
 
-This enhances the application into a decision-support system, not just a prediction tool.
+This transforms the application into a decision-support system, not just a prediction tool.
 
 🛠️ How This Application Was Built
 1. Data Preprocessing
@@ -115,15 +117,10 @@ Stored predictions in real time
 Connected Power BI to dataset
 Built dashboards with KPIs and trends
 🚀 Installation & Setup
-# Clone repository
 git clone https://github.com/bgauri05/vessel-fuel-co2-ml.git
-
 cd vessel-fuel-co2-ml
 
-# Install dependencies
 pip install -r requirements.txt
-
-# Run application
 streamlit run app.py
 📂 Project Structure
 vessel-fuel-co2-ml/
@@ -150,4 +147,4 @@ Contributions are welcome! Feel free to fork the repo and submit a pull request.
 
 📜 License
 
-This project is open-source under the MIT License.
+This project is licensed under the MIT License.
